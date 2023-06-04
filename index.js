@@ -12,7 +12,7 @@ app.get('/', (req, res) => {
 io.on('connection', (socket) => {
   console.log('a user connected');
   socket.on('filter_sale_date', (data) => {
-    console.log(data);
+    io.to(socket.id).emit('request_sale', true);
   });
   socket.on('disconnect', () => {
     console.log('user disconnected');
