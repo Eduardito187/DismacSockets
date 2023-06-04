@@ -11,6 +11,12 @@ app.get('/', (req, res) => {
 
 io.on('connection', (socket) => {
   console.log('a user connected');
+  socket.on('filter_sale_date', (data) => {
+    console.log(data);
+  });
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+  });
 });
 
 server.listen(3000, () => {
