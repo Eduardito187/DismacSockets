@@ -5,8 +5,6 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 
-app.use(express.urlencoded());
-
 app.use(express.json());
 
 app.get('/', (req, res) => {
