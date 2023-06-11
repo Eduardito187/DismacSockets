@@ -4,9 +4,10 @@ const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
-const bodyParser = require('body-parser');
 
-app.use(bodyParser);
+app.use(express.urlencoded());
+
+app.use(express.json());
 
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/public/index.html');
