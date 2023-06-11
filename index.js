@@ -9,14 +9,19 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/public/index.html');
 });
 
-app.post('/NewProcess', function(req, res) {
-  console.log(req);
-
-  res.send({
-    'user_id': "1",
-    'token': "sdsdf"
-  });
-});
+app.route('/NewProcess')
+  .get((req, res) => {
+    console.log("get", req);
+    res.send('Get a random book')
+  })
+  .post((req, res) => {
+    console.log("post", req);
+    res.send('Add a book')
+  })
+  .put((req, res) => {
+    console.log("put", req);
+    res.send('Update the book')
+  })
 
 io.on('connection', (socket) => {
   console.log('a user connected');
