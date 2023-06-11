@@ -9,6 +9,8 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/public/index.html');
 });
 
+app.use(express.bodyParser());
+
 app.route('/NewProcess')
   .get((req, res) => {
     console.log("get", req.body);
