@@ -5,6 +5,12 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 
+console.log(new Date());
+process.env.TZ = "America/La_Paz";
+console.log(new Date());
+
+var ProcessExecute = [];
+
 app.use(express.json());
 
 app.get('/', (req, res) => {
@@ -13,15 +19,14 @@ app.get('/', (req, res) => {
 
 app.route('/NewProcess')
   .get((req, res) => {
-    console.log("get", req.body);
     res.json(
       {
-        "status": true
+        "status": false
       }
     );
   })
   .post((req, res) => {
-    console.log("post", req.body);
+    validateParams(req.body);
     res.json(
       {
         "status": true
@@ -29,13 +34,23 @@ app.route('/NewProcess')
     );
   })
   .put((req, res) => {
-    console.log("put", req.body);
     res.json(
       {
-        "status": true
+        "status": false
       }
     );
   });
+
+function validateParams(params) {
+  if (params.ID != null && params.Ejecucion != null && params.Duracion != null && params.FechaEjecucion != null && params.FechaDuracion != null) {
+    runProcess(params);
+    ProcessExecute.push(params);
+  }
+}
+
+function runProcess(params) {
+  
+}
 
 io.on('connection', (socket) => {
   console.log('a user connected');
