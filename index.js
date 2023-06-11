@@ -8,11 +8,25 @@ const io = new Server(server);
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/public/index.html');
 });
-
+/*
 app.get('/NewProcess', (req, res) => {
   console.log("get", req);
   res.sendFile(__dirname + '/public/index.html');
 });
+*/
+app.route('/NewProcess')
+  .get((req, res) => {
+    console.log("get", req);
+    res.send('Get a random book')
+  })
+  .post((req, res) => {
+    console.log("post", req);
+    res.send('Add a book')
+  })
+  .put((req, res) => {
+    console.log("put", req);
+    res.send('Update the book')
+  });
 
 io.on('connection', (socket) => {
   console.log('a user connected');
@@ -26,5 +40,5 @@ io.on('connection', (socket) => {
 });
 
 server.listen(3000, () => {
-  console.log('Escuchando puerto *:3000');
+  console.log('listening on *:3000');
 });
