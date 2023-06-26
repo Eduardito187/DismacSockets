@@ -134,8 +134,10 @@ getAllProcessPending();
 io.on('connection', (socket) => {
   console.log('a user connected');
   socket.on('filter_sale_date', (data) => {
-    console.log(data);
     io.to(socket.id).emit('request_sale', true);
+  });
+  socket.on('reload_profile', (data) => {
+    io.to(socket.id).emit('reload_profile', true);
   });
   socket.on('disconnect', () => {
     console.log('user disconnected');
