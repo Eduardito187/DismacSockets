@@ -137,6 +137,7 @@ io.on('connection', (socket) => {
     io.to(socket.id).emit('request_sale', true);
   });
   socket.on('reload_profile', (data) => {
+    console.log(data);
     io.to(socket.id).emit('reload_profile', true);
   });
   socket.on('disconnect', () => {
