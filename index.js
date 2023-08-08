@@ -61,7 +61,7 @@ app.route('/CloseAccount')
     if (SOCKET != null){
       SOCKET.emit('CLOSE_'+req.body.id_account+'_ACCOUNT', req.body);
       SESSION_TOKEN.push(req.body);
-      console.log(SESSION_TOKEN);
+      console.log(SESSION_TOKEN, "socket");
     }
     res.json({"status": true});
   })
