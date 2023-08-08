@@ -8,6 +8,7 @@ const axios = require('axios');
 const https = require('https');
 
 var SOCKET = null;
+var SESSION_TOKEN = [];
 
 const KEY_API = "SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
 const URL_HOSTING = "https://dismacapi.grazcompany.com/";
@@ -59,6 +60,8 @@ app.route('/CloseAccount')
   .post((req, res) => {
     if (SOCKET != null){
       SOCKET.emit('CLOSE_'+req.body.id_account+'_ACCOUNT', true);
+      SESSION_TOKEN.push(req.body);
+      console.log(SESSION_TOKEN);
     }
     res.json({"status": true});
   })
