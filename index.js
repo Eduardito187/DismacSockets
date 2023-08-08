@@ -5,15 +5,76 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 const axios = require('axios');
+const https = require('https');
+
+var {google} = require('googleapis');
+var SOCKET = null;
+var MESSAGING_SCOPE = 'https://www.googleapis.com/auth/firebase.messaging';
+var SCOPES = [MESSAGING_SCOPE];
+function getAccessToken() {
+    return new Promise(function(resolve, reject) {
+        var key = require('./path/to/serviceAccountKey.json');
+        var jwtClient = new google.auth.JWT(
+            key.client_email,
+            null,
+            key.private_key,
+            SCOPES,
+            null
+        );
+        jwtClient.authorize(function(err, tokens) {
+            if (err) {
+                reject(err);
+                return;
+            }
+            resolve(tokens.access_token);
+        });
+   });
+}
+var PROJECT_ID = 'notificaciones-a60ac';
+var HOST = 'fcm.googleapis.com';
+var PATH = '/v1/projects/' + PROJECT_ID + '/messages:send';
+var BODY = {
+  "message": {
+    "token": "fofveZuBRLuskqi6YuuPvS:APA91bHN9_iwToKLq6AdvhOcGO0K3sUzhA8X_bEf6qj5UCimtV5FpD91Bs4WCVYxprAnVua9O4-ApZY-jr0pJQfpOCrK1oHWvwEfen62B4VWj4XIf73C3tFjy5l_YCFHUb7FI-kGiHu-",
+    "notification": {
+      "title": "Match update",
+      "body": "Arsenal goal in added time, score is now 3-0"
+    }
+  }
+};
+sendFcmMessage(BODY);
+function sendFcmMessage(fcmMessage) {
+    getAccessToken().then(function(accessToken) {
+        var options = {
+            hostname: HOST,
+            path: PATH,
+            method: 'POST',
+            headers: {
+                'Authorization': 'Bearer ' + accessToken
+            }
+        };
+        var request = https.request(options, function(resp) {
+            resp.setEncoding('utf8');
+            resp.on('data', function(data) {
+                console.log('Message sent to Firebase for delivery, response:');
+                console.log(data);
+            });
+        });
+        request.on('error', function(err) {
+            console.log('Unable to send message to Firebase');
+            console.log(err);
+        });
+        request.write(JSON.stringify(fcmMessage));
+        request.end();
+    });
+}
+
 
 const KEY_API = "SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
 const URL_HOSTING = "https://dismacapi.grazcompany.com/";
 const EXTEND_API = "api/";
-const EXTEND_API_SHOW = "/show/";
 
-const {
-  listTimeZones, findTimeZone, getZonedTime, getUnixTime
-} = require('timezone-support');
+const {listTimeZones, findTimeZone, getZonedTime, getUnixTime} = require('timezone-support');
 
 var ProcessExecute = [];
 
@@ -28,26 +89,42 @@ app.get('/', (req, res) => {
 
 app.route('/NewProcess')
   .get((req, res) => {
-    res.json(
-      {
-        "status": false
-      }
-    );
+    res.json({"status": false});
   })
   .post((req, res) => {
     validateParams(req.body);
-    res.json(
-      {
-        "status": true
-      }
-    );
+    res.json({"status": true});
   })
   .put((req, res) => {
-    res.json(
-      {
-        "status": false
-      }
-    );
+    res.json({"status": false});
+  });
+
+app.route('/CloseAccount')
+  .get((req, res) => {
+    res.json({"status": false});
+  })
+  .post((req, res) => {
+    if (SOCKET != null){
+      SOCKET.emit('CLOSE_'+req.body.id_account+'_ACCOUNT', true);
+    }
+    res.json({"status": true});
+  })
+  .put((req, res) => {
+    res.json({"status": false});
+  });
+
+app.route('/DisableAccount')
+  .get((req, res) => {
+    res.json({"status": false});
+  })
+  .post((req, res) => {
+    if (SOCKET != null){
+      SOCKET.emit('DISABLE_'+req.body.id_account+'_ACCOUNT', true);
+    }
+    res.json({"status": true});
+  })
+  .put((req, res) => {
+    res.json({"status": false});
   });
 
 function getCurrentDate() {
@@ -106,10 +183,7 @@ function GET_HEADER_TOKEN(token) {
 function executeProcess(params, time) {
   setTimeout(() => {
     axios.post(URL_API("process"),{"id":params.ID},GET_HEADER_TOKEN(KEY_API)).then(res => {
-      console.log(res.data);
-    }).catch(err => {
-      console.log(err);
-    });
+    }).catch(err => {});
   }, time);
 }
 
@@ -118,9 +192,7 @@ function getAllProcessPending() {
   axios.get(URL_API("process"),GET_HEADER_TOKEN(KEY_API)).then(res => {
     ProcessExecute = res.data.response;
     runAllProcessOn();
-  }).catch(err => {
-    console.log(err);
-  });
+  }).catch(err => {});
 }
 
 function runAllProcessOn() {
@@ -132,7 +204,7 @@ function runAllProcessOn() {
 getAllProcessPending();
 
 io.on('connection', (socket) => {
-  console.log('a user connected');
+  SOCKET = socket;
   socket.on('filter_sale_date', (data) => {
     io.to(socket.id).emit('request_sale', true);
   });
