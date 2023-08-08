@@ -60,15 +60,11 @@ app.route('/CloseAccount')
     res.json({"status": false});
   })
   .post((req, res) => {
-    console.log(req.body);
     if (SOCKET != null){
       SOCKET.emit('CLOSE_'+req.body.id_account+'_ACCOUNT', req.body);
-
       const filteredArray = SESSION_TOKEN.filter(item => !item.id_account || item.id_account !== req.body.id_account);
       SESSION_TOKEN = filteredArray;
-
       SESSION_TOKEN.push(req.body);
-      console.log(SESSION_TOKEN);
     }
     res.json({"status": true});
   })
