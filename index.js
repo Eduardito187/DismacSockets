@@ -99,6 +99,20 @@ app.route('/NewProcess')
     res.json({"status": false});
   });
 
+app.route('/UpdateAccountPartner')
+  .get((req, res) => {
+    res.json({"status": false});
+  })
+  .post((req, res) => {
+    if (SOCKET != null){
+      SOCKET.emit('UPDATE_'+req.body.id_partner+'_PARTNER', true);
+    }
+    res.json({"status": true});
+  })
+  .put((req, res) => {
+    res.json({"status": false});
+  });
+
 app.route('/CloseAccount')
   .get((req, res) => {
     res.json({"status": false});
