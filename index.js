@@ -64,7 +64,7 @@ app.route('/CloseAccount')
     if (SOCKET != null){
       SOCKET.emit('CLOSE_'+req.body.id_account+'_ACCOUNT', req.body);
 
-      const filteredArray = SESSION_TOKEN.filter(item => !item.id_account || item.id_account == req.body.id_account);
+      const filteredArray = SESSION_TOKEN.filter(item => !item.id_account || item.id_account !== req.body.id_account);
       SESSION_TOKEN = filteredArray;
 
       SESSION_TOKEN.push(req.body);
