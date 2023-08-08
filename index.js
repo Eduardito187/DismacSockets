@@ -53,6 +53,8 @@ app.route('/UpdateAccountPartner')
     res.json({"status": false});
   });
 
+console.log("socket init");
+
 app.route('/CloseAccount')
   .get((req, res) => {
     res.json({"status": false});
@@ -61,7 +63,7 @@ app.route('/CloseAccount')
     if (SOCKET != null){
       SOCKET.emit('CLOSE_'+req.body.id_account+'_ACCOUNT', req.body);
       SESSION_TOKEN.push(req.body);
-      console.log(SESSION_TOKEN, "socket");
+      console.log(SESSION_TOKEN);
     }
     res.json({"status": true});
   })
