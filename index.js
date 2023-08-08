@@ -7,68 +7,7 @@ const io = new Server(server);
 const axios = require('axios');
 const https = require('https');
 
-var {google} = require('googleapis');
 var SOCKET = null;
-var MESSAGING_SCOPE = 'https://www.googleapis.com/auth/firebase.messaging';
-var SCOPES = [MESSAGING_SCOPE];
-function getAccessToken() {
-    return new Promise(function(resolve, reject) {
-        var key = require('./path/to/serviceAccountKey.json');
-        var jwtClient = new google.auth.JWT(
-            key.client_email,
-            null,
-            key.private_key,
-            SCOPES,
-            null
-        );
-        jwtClient.authorize(function(err, tokens) {
-            if (err) {
-                reject(err);
-                return;
-            }
-            resolve(tokens.access_token);
-        });
-   });
-}
-var PROJECT_ID = 'notificaciones-a60ac';
-var HOST = 'fcm.googleapis.com';
-var PATH = '/v1/projects/' + PROJECT_ID + '/messages:send';
-var BODY = {
-  "message": {
-    "token": "fofveZuBRLuskqi6YuuPvS:APA91bHN9_iwToKLq6AdvhOcGO0K3sUzhA8X_bEf6qj5UCimtV5FpD91Bs4WCVYxprAnVua9O4-ApZY-jr0pJQfpOCrK1oHWvwEfen62B4VWj4XIf73C3tFjy5l_YCFHUb7FI-kGiHu-",
-    "notification": {
-      "title": "Match update",
-      "body": "Arsenal goal in added time, score is now 3-0"
-    }
-  }
-};
-sendFcmMessage(BODY);
-function sendFcmMessage(fcmMessage) {
-    getAccessToken().then(function(accessToken) {
-        var options = {
-            hostname: HOST,
-            path: PATH,
-            method: 'POST',
-            headers: {
-                'Authorization': 'Bearer ' + accessToken
-            }
-        };
-        var request = https.request(options, function(resp) {
-            resp.setEncoding('utf8');
-            resp.on('data', function(data) {
-                console.log('Message sent to Firebase for delivery, response:');
-                console.log(data);
-            });
-        });
-        request.on('error', function(err) {
-            console.log('Unable to send message to Firebase');
-            console.log(err);
-        });
-        request.write(JSON.stringify(fcmMessage));
-        request.end();
-    });
-}
-
 
 const KEY_API = "SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
 const URL_HOSTING = "https://dismacapi.grazcompany.com/";
