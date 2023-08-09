@@ -72,6 +72,15 @@ app.route('/CloseAccount')
     res.json({"status": false});
   });
 
+  
+app.route('/VersionVerify').get((req, res) => {res.json({"status": false});})
+  .post((req, res) => {
+    if (SOCKET != null){
+      SOCKET.emit('VERSION_'+req.body.id_account+'_APP', req.body.status);
+    }
+    res.json({"status": true});})
+  .put((req, res) => {res.json({"status": false});});
+
 app.route('/DisableAccount')
   .get((req, res) => {
     res.json({"status": false});
