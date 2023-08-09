@@ -163,6 +163,7 @@ function runAllProcessOn() {
 getAllProcessPending();
 
 io.on('connection', (socket) => {
+  console.log('connected');
   SOCKET = socket;
   socket.on('filter_sale_date', (data) => {
     io.to(socket.id).emit('request_sale', true);

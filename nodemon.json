@@ -1,0 +1,14 @@
+{
+    "restartable": "rs",
+    "ignore": ["node_modules/**/node_modules"],
+    "verbose": true,
+    "execMap": {
+      "js": "node --inspect"
+    },
+    "watch": ["src"],
+    "env": {
+      "NODE_ENV": "development"
+    },
+    "ext": "js,json",
+    "log": "logs/nodemon.log"
+}  
