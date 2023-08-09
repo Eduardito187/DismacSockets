@@ -24,6 +24,7 @@
     "firebase": "^10.1.0",
     "firebase-admin": "^11.10.1",
     "googleapis": "^123.0.0",
+    "nodemon": "^3.0.1",
     "socket.io": "^4.5.4",
     "timezone-support": "^3.1.0"
   }
