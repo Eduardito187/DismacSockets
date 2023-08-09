@@ -21,6 +21,8 @@ var ProcessExecute = [];
 var ProcessSuccess = [];
 var ProcessRevert = [];
 
+var DefaultResponse = {"status": false};
+
 app.use(express.json());
 
 app.get('/', (req, res) => {
@@ -29,19 +31,19 @@ app.get('/', (req, res) => {
 
 app.route('/NewProcess')
   .get((req, res) => {
-    res.json({"status": false});
+    res.json(DefaultResponse);
   })
   .post((req, res) => {
     validateParams(req.body);
     res.json({"status": true});
   })
   .put((req, res) => {
-    res.json({"status": false});
+    res.json(DefaultResponse);
   });
 
 app.route('/UpdateAccountPartner')
   .get((req, res) => {
-    res.json({"status": false});
+    res.json(DefaultResponse);
   })
   .post((req, res) => {
     if (SOCKET != null){
@@ -50,14 +52,14 @@ app.route('/UpdateAccountPartner')
     res.json({"status": true});
   })
   .put((req, res) => {
-    res.json({"status": false});
+    res.json(DefaultResponse);
   });
 
 console.log("socket init");
 
 app.route('/CloseAccount')
   .get((req, res) => {
-    res.json({"status": false});
+    res.json(DefaultResponse);
   })
   .post((req, res) => {
     if (SOCKET != null){
@@ -69,21 +71,21 @@ app.route('/CloseAccount')
     res.json({"status": true});
   })
   .put((req, res) => {
-    res.json({"status": false});
+    res.json(DefaultResponse);
   });
 
   
-app.route('/VersionVerify').get((req, res) => {res.json({"status": false});})
+app.route('/VersionVerify').get((req, res) => {res.json(DefaultResponse);})
   .post((req, res) => {
     if (SOCKET != null){
       SOCKET.emit('VERSION_'+req.body.id_account+'_APP', req.body.status);
     }
     res.json({"status": true});})
-  .put((req, res) => {res.json({"status": false});});
+  .put((req, res) => {res.json(DefaultResponse);});
 
 app.route('/DisableAccount')
   .get((req, res) => {
-    res.json({"status": false});
+    res.json(DefaultResponse);
   })
   .post((req, res) => {
     if (SOCKET != null){
@@ -92,7 +94,7 @@ app.route('/DisableAccount')
     res.json({"status": true});
   })
   .put((req, res) => {
-    res.json({"status": false});
+    res.json(DefaultResponse);
   });
 
 function getCurrentDate() {
