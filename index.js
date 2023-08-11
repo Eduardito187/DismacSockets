@@ -55,7 +55,20 @@ app.route('/UpdateAccountPartner')
     res.json(DefaultResponse);
   });
 
-console.log("socket init");
+  
+app.route('/ReloadSale')
+.get((req, res) => {
+  res.json(DefaultResponse);
+})
+.post((req, res) => {
+  if (SOCKET != null){
+    SOCKET.emit('RELOAD_'+req.body.id_sale+'_SALE', true);
+  }
+  res.json({"status": true});
+})
+.put((req, res) => {
+  res.json(DefaultResponse);
+});
 
 app.route('/CloseAccount')
   .get((req, res) => {
